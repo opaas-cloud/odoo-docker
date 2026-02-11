@@ -9,6 +9,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Target arch
 ARG ARCH
 ARG WKHTMLTOPDF_SHA
+ARG ODOO_SHA
 
 # Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
 RUN apt-get update && \
@@ -75,8 +76,11 @@ RUN npm install -g rtlcss \
 
 # Install Odoo
 ENV ODOO_VERSION 16.0
-ARG ODOO_RELEASE=20230109
-ARG ODOO_SHA=884bf72c7318835b9ac56be2594032cbba7b8c7b
+RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
+    && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
+    && apt-get update \
+    && apt-get -y install --no-install-recommends ./odoo.deb \
+    && rm -rf /var/lib/apt/lists/* odoo.deb
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
         adduser \
