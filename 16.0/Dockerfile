@@ -8,6 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Target arch
 ARG ARCH
+ARG WKHTMLTOPDF_SHA
 
 # Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
 RUN apt-get update && \
@@ -40,10 +41,7 @@ RUN apt-get update && \
         python3-xlwt \
         python3-astor \
         xz-utils \
-    && TARGETARCH=$ARCH \
-    && WKHTMLTOPDF_ARCH=$ARCH \
-    && WKHTMLTOPDF_SHA=967390a759707337b46d1c02452e2bb6b2dc6d59  \
-    && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.jammy_${WKHTMLTOPDF_ARCH}.deb \
+    && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.jammy_${ARCH}.deb \
     && echo ${WKHTMLTOPDF_SHA} wkhtmltox.deb | sha1sum -c - \
     && apt-get install -y --no-install-recommends ./wkhtmltox.deb \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb \
