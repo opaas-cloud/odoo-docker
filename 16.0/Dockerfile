@@ -5,6 +5,10 @@ SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
 # Generate locale C.UTF-8 for postgres and general locale data
 ENV LANG en_US.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive
+
+# Target arch
+ARG ARCH
+
 # Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
@@ -36,8 +40,8 @@ RUN apt-get update && \
         python3-xlwt \
         python3-astor \
         xz-utils \
-    && TARGETARCH=amd64 \
-    && WKHTMLTOPDF_ARCH=amd64 \
+    && TARGETARCH=$ARCH \
+    && WKHTMLTOPDF_ARCH=$ARCH \
     && WKHTMLTOPDF_SHA=967390a759707337b46d1c02452e2bb6b2dc6d59  \
     && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.jammy_${WKHTMLTOPDF_ARCH}.deb \
     && echo ${WKHTMLTOPDF_SHA} wkhtmltox.deb | sha1sum -c - \
